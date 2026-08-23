@@ -13,20 +13,6 @@
 
 ---
 
-## ⚙️ Setup
-
-Chatbot runs on a Netlify serverless function that keeps your Groq API key private.
-
-1. Deploy this repo on [Netlify](https://netlify.com) (publish directory `.`, no build command needed — already set in `netlify.toml`).
-2. In your Netlify site: **Site configuration → Environment variables → Add a variable**
-   - Key: `GROQ_API_KEY`
-   - Value: your key from [console.groq.com/keys](https://console.groq.com/keys)
-3. Redeploy the site so the function picks up the key.
-
-Full details, local testing instructions, and how to change the model are in the comments at the top of `netlify/functions/chat.js`.
-
----
-
 Made By : ahmedosama2013b@gmail.com
 
-Link : https://github.com/ahmedosama2013/chatbot
+Link : https://ahmedosamachatbot.netlify.app/
