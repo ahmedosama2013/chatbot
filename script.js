@@ -351,15 +351,18 @@ function appendMessageToDOM(role, content, isError = false) {
   const body = document.createElement("div");
   body.className = "msg-body";
 
-  const roleLabel = document.createElement("div");
-  roleLabel.className = "msg-role";
-  roleLabel.textContent = role === "user" ? "You" : "Chatbot";
+  // Only append roleLabel if it's the assistant/chatbot
+  if (role !== "user") {
+    const roleLabel = document.createElement("div");
+    roleLabel.className = "msg-role";
+    roleLabel.textContent = "Chatbot";
+    body.appendChild(roleLabel);
+  }
 
   const contentEl = document.createElement("div");
   contentEl.className = "msg-content";
   contentEl.innerHTML = formatContent(content);
 
-  body.appendChild(roleLabel);
   body.appendChild(contentEl);
   wrap.appendChild(avatar);
   wrap.appendChild(body);
