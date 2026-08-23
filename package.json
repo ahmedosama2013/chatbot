@@ -1,0 +1,9 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "A ChatGPT-style dark mode chatbot powered by a Netlify serverless function.",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev"
+  }
+}
