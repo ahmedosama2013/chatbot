@@ -508,6 +508,12 @@ a {
 
 .msg.user {
   flex-direction: row-reverse;
+  gap: 6px; /* Reduced from default 12px to bring the avatar closer */
+}
+
+/* Align avatar vertically with top of the message bubble */
+.msg.user .msg-avatar {
+  margin-top: 0;
 }
 
 .msg-avatar {
