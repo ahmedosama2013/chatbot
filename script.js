@@ -162,7 +162,7 @@ function renderActiveConversation() {
   }
   welcomeEl.style.display = "none";
   conv.messages.forEach((m) => appendMessageToDOM(m.role, m.content));
-  scrollToBottom();
+  scrollToBottom(true);
 }
 
 function updateTopbarTitle() {
@@ -381,8 +381,15 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function scrollToBottom() {
+function scrollToBottom(force = false) {
   requestAnimationFrame(() => {
-    chatArea.scrollTop = chatArea.scrollHeight;
+    // Check if the user is within 100px of the bottom
+    const isNearBottom = 
+      chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 100;
+
+    // Only scroll if forced (e.g. user sends a message) or if they are already at the bottom
+    if (force || isNearBottom) {
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
   });
 }
