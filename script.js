@@ -330,9 +330,7 @@ function appendTypingIndicator() {
   const wrap = document.createElement("div");
   wrap.className = "msg assistant";
   wrap.innerHTML = `
-    <div class="msg-avatar">AI</div>
     <div class="msg-body">
-      <div class="msg-role">Chatbot</div>
       <div class="typing"><span></span><span></span><span></span></div>
     </div>
   `;
@@ -344,27 +342,14 @@ function appendMessageToDOM(role, content, isError = false) {
   const wrap = document.createElement("div");
   wrap.className = "msg " + role + (isError ? " error" : "");
 
-  const avatar = document.createElement("div");
-  avatar.className = "msg-avatar";
-  avatar.textContent = role === "user" ? "You" : "AI";
-
   const body = document.createElement("div");
   body.className = "msg-body";
-
-  // Only append roleLabel if it's the assistant/chatbot
-  if (role !== "user") {
-    const roleLabel = document.createElement("div");
-    roleLabel.className = "msg-role";
-    roleLabel.textContent = "Chatbot";
-    body.appendChild(roleLabel);
-  }
 
   const contentEl = document.createElement("div");
   contentEl.className = "msg-content";
   contentEl.innerHTML = formatContent(content);
 
   body.appendChild(contentEl);
-  wrap.appendChild(avatar);
   wrap.appendChild(body);
   messagesEl.appendChild(wrap);
   return wrap;
