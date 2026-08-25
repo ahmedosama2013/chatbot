@@ -1,6 +1,6 @@
 # 💬 Chatbot
 
-**Chatbot** is a clean, dark theme AI chat web application powered by the Groq API under the hood.
+**Chatbot** is a clean, dark theme AI chat web application, it uses a Groq API.
 
 ## ✨ Features
 
