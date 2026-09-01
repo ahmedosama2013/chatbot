@@ -73,12 +73,15 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
-    if (!response.ok) {
+        if (!response.ok) {
+      const friendlyError =
+        response.status === 429
+          ? "You have reached your limit, please try again later."
+          : data?.error?.message || "The Groq API returned an error.";
+
       return {
         statusCode: response.status,
-        body: JSON.stringify({
-          error: data?.error?.message || "The Groq API returned an error.",
-        }),
+        body: JSON.stringify({ error: friendlyError }),
       };
     }
 
