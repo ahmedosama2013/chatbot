@@ -16,6 +16,18 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "openai/gpt-oss-120b"; // Updated to replace deprecated llama-3.3-70b-versatile
 
+const MAX_HISTORY_MESSAGES = 12;
+
+function friendlyErrorFor(status) {
+  if (status === 429 || status === 413) {
+    return "You've hit the message limit for now, try again in a few seconds.";
+  }
+  if (status >= 500) {
+    return "The AI service is temporarily unavailable. Please try again shortly.";
+  }
+  return "Something went wrong processing that message. Please try again.";
+}
+
 exports.handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
@@ -56,6 +68,13 @@ exports.handler = async (event) => {
     };
   }
 
+  // Keep only the most recent messages so token usage stays bounded, no matter
+  // how long the conversation has gotten on the client.
+  const trimmedMessages =
+    messages.length > MAX_HISTORY_MESSAGES
+      ? messages.slice(messages.length - MAX_HISTORY_MESSAGES)
+      : messages;
+
   try {
     const response = await fetch(GROQ_API_URL, {
       method: "POST",
@@ -65,7 +84,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: GROQ_MODEL,
-        messages,
+        messages: trimmedMessages,
         temperature: 0.7,
         stream: false,
       }),
@@ -73,15 +92,12 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
-        if (!response.ok) {
-      const friendlyError =
-        response.status === 429
-          ? "You have reached your limit, please try again later."
-          : data?.error?.message || "The Groq API returned an error.";
-
+    if (!response.ok) {
+      // Never forward Groq's raw error text to the client — always translate
+      // it into one of a few short, user-facing messages.
       return {
         statusCode: response.status,
-        body: JSON.stringify({ error: friendlyError }),
+        body: JSON.stringify({ error: friendlyErrorFor(response.status) }),
       };
     }
 
@@ -94,7 +110,7 @@ exports.handler = async (event) => {
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to reach the Groq API. " + err.message }),
+      body: JSON.stringify({ error: "Couldn't reach the AI service. Please try again." }),
     };
   }
 };
